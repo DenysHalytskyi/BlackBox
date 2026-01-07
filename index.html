@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlackBox | Private Vault</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>BLACK<span>BOX</span></h1>
+    <small id="status">System Online</small>
+</header>
+
+<main>
+    <div id="view-vault" class="view">
+        <h2>Your Secrets</h2>
+        <div id="list">
+            <p>No data stored yet.</p>
+        </div>
+    </div>
+
+    <div id="view-add" class="view">
+        <h2>Add New Secret</h2>
+        <input type="text" id="note-text" placeholder="Enter secret note...">
+
+        <p>Attach Photo Evidence:</p>
+        <input type="file" id="photo-input" accept="image/*" capture="environment">
+
+        <button onclick="saveSecret()">Save to Vault</button>
+    </div>
+
+    <div id="view-settings" class="view">
+        <h2>Security</h2>
+        <button onclick="getLocation()">Log My Location</button>
+        <p id="location-info">Location: Unknown</p>
+        <button id="danger" onclick="clearData()">Delete All Data</button>
+    </div>
+</main>
+
+<nav>
+    <button onclick="showView('view-vault')">Vault</button>
+    <button onclick="showView('view-add')">Add</button>
+    <button onclick="showView('view-settings')">System</button>
+</nav>
+
+<script src="app.js"></script>
+</body>
+</html>
