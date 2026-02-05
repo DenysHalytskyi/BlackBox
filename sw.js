@@ -1,42 +1,49 @@
-// Назва сховища (кешу)
 const CACHE_NAME = 'blackbox-v1';
-const urlsToCache = [
-  '/BlackBox/', 
+
+// Список усіх файлів для офлайн-режиму
+const filesToCache = [
+  '/BlackBox/',
   '/BlackBox/index.html',
   '/BlackBox/style.css',
   '/BlackBox/app.js',
   '/BlackBox/manifest.json'
 ];
 
-// Подія встановлення: зберігаємо файли в кеш
-self.addEventListener('install', function(event) {
-    event.waitUntil(
-        caches.open(cacheName).then(function(cache) {
-            return cache.addAll(filesToCache);
-        })
-    );
+// 1. Подія встановлення: записуємо файли в кеш
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('Кешування ресурсів...');
+      return cache.addAll(filesToCache);
+    })
+  );
 });
 
-// Подія активації: видаляємо старі версії кешу, якщо вони є
-self.addEventListener('activate', function(event) {
-    event.waitUntil(
-        caches.keys().then(function(cacheNames) {
-            return Promise.all(
-                cacheNames.map(function(thisCacheName) {
-                    if (thisCacheName !== cacheName) {
-                        return caches.delete(thisCacheName);
-                    }
-                })
-            );
+// 2. Подія активації: видаляємо старі версії кешу
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cache) => {
+          if (cache !== CACHE_NAME) {
+            console.log('Видалення старого кешу...');
+            return caches.delete(cache);
+          }
         })
-    );
+      );
+    })
+  );
 });
 
-// Подія запиту: якщо немає інтернету, беремо файли з кешу
-self.addEventListener('fetch', function(event) {
-    event.respondWith(
-        caches.match(event.request).then(function(response) {
-            return response || fetch(event.request);
-        })
-    );
+// 3. Перехоплення запитів: спочатку шукаємо в кеші, потім у мережі
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      // Якщо файл є в кеші — повертаємо його, інакше йдемо в інтернет
+      return response || fetch(event.request);
+    }).catch(() => {
+      // Якщо немає інтернету і файлу в кеші (запасний варіант)
+      return caches.match('/BlackBox/index.html');
+    })
+  );
 });
