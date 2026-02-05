@@ -1,11 +1,11 @@
 // Назва сховища (кешу)
-var cacheName = 'blackbox-v1';
-// Список файлів, які треба зберегти для роботи офлайн
-var filesToCache = [
-    'index.html',
-    'style.css',
-    'app.js',
-    'manifest.json'
+const CACHE_NAME = 'blackbox-v1';
+const urlsToCache = [
+  '/BlackBox/', 
+  '/BlackBox/index.html',
+  '/BlackBox/style.css',
+  '/BlackBox/app.js',
+  '/BlackBox/manifest.json'
 ];
 
 // Подія встановлення: зберігаємо файли в кеш
